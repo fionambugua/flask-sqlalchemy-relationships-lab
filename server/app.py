@@ -42,9 +42,15 @@ def get_event_sessions(id):
     return make_response({"error": "Event not found"}, 404)
 
 
-@app.route('/speakers')
+@app.route("/speakers")
 def get_speakers():
-    pass
+    spakers = [
+        {"id": speaker.id, "name": speaker.name} for speaker in Speaker.query.all()
+    ]
+    if spakers:
+        return make_response(spakers, 200)
+
+    return make_response({"message": "No speakers"})
 
 
 @app.route('/speakers/<int:id>')

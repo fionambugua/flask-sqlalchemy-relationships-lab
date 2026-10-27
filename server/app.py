@@ -53,9 +53,20 @@ def get_speakers():
     return make_response({"message": "No speakers"})
 
 
-@app.route('/speakers/<int:id>')
+@app.route("/speakers/<int:id>")
 def get_speaker(id):
-    pass
+    speaker = Speaker.query.filter_by(id=id).first()
+
+    if speaker:
+        return make_response(
+            {
+                "id": speaker.id,
+                "name": speaker.name,
+                "bio_text": getattr(speaker, "bio_text", "No bio available"),
+            },
+            200,
+        )
+    return make_response({"error": "Speaker not found"}, 404)
 
 
 @app.route('/sessions/<int:id>/speakers')

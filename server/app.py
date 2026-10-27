@@ -16,9 +16,16 @@ db.init_app(app)
 
 # TODO: add functionality to all routes
 
-@app.route('/events')
+@app.route("/events")
 def get_events():
-    pass
+    events = [
+        {"id": event.id, "name": event.name, "location": event.location}
+        for event in Event.query.all()
+    ]
+    if events:
+        return make_response(events, 200)
+    return make_response({"message": "No events"}, 404)
+
 
 
 @app.route('/events/<int:id>/sessions')

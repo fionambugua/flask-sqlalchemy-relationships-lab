@@ -2,13 +2,23 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy.ext.associationproxy import association_proxy
 
-metadata = MetaData(naming_convention={
-    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-})
+metadata = MetaData(
+    naming_convention={
+        "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+    }
+)
 
 db = SQLAlchemy(metadata=metadata)
 
 # TODO: add association table
+
+session_speakers = db.Table(
+    "session_speakers",
+    metadata,
+    db.Column("session_id", db.Integer, db.ForeignKey("sessions.id"), primary_key=True),
+    db.Column("speaker_id", db.Integer, db.ForeignKey("speakers.id"), primary_key=True),
+)
+
 
 
 # TODO: set up relationships for all models

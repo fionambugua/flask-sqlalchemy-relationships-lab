@@ -28,9 +28,18 @@ def get_events():
 
 
 
-@app.route('/events/<int:id>/sessions')
+@app.route("/events/<int:id>/sessions")
 def get_event_sessions(id):
-    pass
+    event = Event.query.filter_by(id=id).first()
+    if event:
+        sessions = [
+            {"id": s.id, "title": s.title, "start_time": s.start_time.isoformat()}
+            for s in event.sessions
+        ]
+
+        return make_response(sessions, 200)
+
+    return make_response({"error": "Event not found"}, 404)
 
 
 @app.route('/speakers')

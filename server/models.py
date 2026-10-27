@@ -76,11 +76,13 @@ class Speaker(db.Model):
         return f"<Speaker {self.id}, {self.name}>"
 
 class Bio(db.Model):
-    __tablename__ = 'bios'
+    __tablename__ = "bios"
 
     id = db.Column(db.Integer, primary_key=True)
-    bio_text = db.Column(db.Text, nullable=False)
-    speaker_id = db.Column(db.Integer)
+    bio_text = db.Column(db.Text, nullable=False, default="No bio available")
+    speaker_id = db.Column(db.Integer, db.ForeignKey("speakers.id"))
+
+    speaker = db.relationship("Speaker", back_populates="bio")
 
     def __repr__(self):
-        return f'<Bio {id}, {bio_text}>'
+        return f"<Bio {self.id}, {self.bio_text}>"

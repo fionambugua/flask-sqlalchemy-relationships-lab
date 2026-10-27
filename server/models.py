@@ -23,14 +23,18 @@ session_speakers = db.Table(
 
 # TODO: set up relationships for all models
 class Event(db.Model):
-    __tablename__ = 'events'
+    __tablename__ = "events"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     location = db.Column(db.String, nullable=False)
 
+    sessions = db.relationship(
+        "Session", back_populates="event", cascade="all,delete-orphan"
+    )
+
     def __repr__(self):
-        return f'<Event {self.id}, {self.name}, {self.location}>'
+        return f"<Event {self.id}, {self.name}, {self.location}>"
 
 class Session(db.Model):
     __tablename__ = 'sessions'

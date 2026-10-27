@@ -69,10 +69,22 @@ def get_speaker(id):
     return make_response({"error": "Speaker not found"}, 404)
 
 
-@app.route('/sessions/<int:id>/speakers')
+@app.route("/sessions/<int:id>/speakers")
 def get_session_speakers(id):
-    pass
+    session = Session.query.filter_by(id=id).first()
+
+    if session:
+        speakers = [
+            {
+                "id": s.id,
+                "name": s.name,
+                "bio_text": getattr(s, "bio_text", "No bio available"),
+            }
+            for s in session.speakers
+        ]
+        return make_response(speakers, 200)
+    return make_response({"error": "Session not found"}, 404)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(port=5555, debug=True)

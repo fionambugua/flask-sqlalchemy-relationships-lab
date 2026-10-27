@@ -57,13 +57,23 @@ class Session(db.Model):
 
 
 class Speaker(db.Model):
-    __tablename__ = 'speakers'
+    __tablename__ = "speakers"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
 
+    bio = db.relationship(
+        "Bio", back_populates="speaker", uselist=False, cascade="all,delete-orphan"
+    )
+
+    sessions = db.relationship(
+        "Session",
+        secondary=session_speakers,
+        back_populates="speakers",
+    )
+
     def __repr__(self):
-        return f'<Speaker {id}, {name}>'
+        return f"<Speaker {self.id}, {self.name}>"
 
 class Bio(db.Model):
     __tablename__ = 'bios'

@@ -37,16 +37,23 @@ class Event(db.Model):
         return f"<Event {self.id}, {self.name}, {self.location}>"
 
 class Session(db.Model):
-    __tablename__ = 'sessions'
+    __tablename__ = "sessions"
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     start_time = db.Column(db.DateTime)
-    event_id = db.Column(db.Integer)
+    event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
 
+    event = db.relationship("Event", back_populates="sessions")
+
+    speakers = db.relationship(
+        "Speaker",
+        secondary=session_speakers,
+        back_populates="sessions",
+    )
 
     def __repr__(self):
-        return f'<Session {self.id}, {self.title}, {self.start_time}>'
+        return f"<Session {self.id}, {self.title}, {self.start_time}>"
 
 
 class Speaker(db.Model):

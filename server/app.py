@@ -33,7 +33,7 @@ def get_event_sessions(id):
     event = Event.query.filter_by(id=id).first()
     if event:
         sessions = [
-            {"id": s.id, "title": s.title, "start_time": s.start_time.isoformat()}
+            {"id": s.id, "title": s.title, "start_time": s.start_time.isoformat() if s.start_time else None}
             for s in event.sessions
         ]
 
@@ -50,7 +50,7 @@ def get_speakers():
     if spakers:
         return make_response(spakers, 200)
 
-    return make_response({"message": "No speakers"})
+    return make_response({"message": "No speakers"}, 404)
 
 
 @app.route("/speakers/<int:id>")
@@ -62,7 +62,7 @@ def get_speaker(id):
             {
                 "id": speaker.id,
                 "name": speaker.name,
-                "bio_text": getattr(speaker, "bio_text", "No bio available"),
+                "bio_text": speaker.bio.bio_text if speaker.bio else "No bio available",
             },
             200,
         )
@@ -78,7 +78,7 @@ def get_session_speakers(id):
             {
                 "id": s.id,
                 "name": s.name,
-                "bio_text": getattr(s, "bio_text", "No bio available"),
+                "bio_text": s.bio.bio_text if s.bio else "No bio available",
             }
             for s in session.speakers
         ]
